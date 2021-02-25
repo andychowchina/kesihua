@@ -2,11 +2,7 @@
   <div class="app-container">
     <el-row :gutter="10" class="mb8">
       <el-col :span="1.5">
-        <el-button
-          type="primary"
-          plain
-          icon="el-icon-plus"
-          size="mini"
+        <el-button type="primary" plain icon="el-icon-plus" size="mini"
           >新增</el-button
         >
       </el-col>
@@ -14,7 +10,7 @@
 
     <div>
       <div class="demo-image">
-        <div class="block" v-for="(img,key) in imgs" :key="key">
+        <div class="block" v-for="(img, key) in imgs" :key="key">
           <span class="demonstration">{{ img.name }}</span>
           <el-image
             style="width: 150px; height: 150px"
@@ -24,21 +20,13 @@
         </div>
       </div>
     </div>
+
+    <div id="main" style="height:100px"></div>
   </div>
 </template>
 
 <script>
-
-import * as echarts from 'echarts/core';
-import {
-    GridComponent
-} from 'echarts/components';
-import {
-    LineChart
-} from 'echarts/charts';
-import {
-    CanvasRenderer
-} from 'echarts/renderers';
+import * as echarts from "echarts";
 
 export default {
   name: "imgdata",
@@ -58,30 +46,61 @@ export default {
       ],
     };
   },
-  methods: {},
+  mounted() {
+    this.init_cv()
+  },
+  methods: {
+    init_cv() {
+      var chartDom = document.getElementById("main");
+      var myChart = echarts.init(chartDom);
+      var option;
+
+      option = {
+        xAxis: {
+          type: "category",
+          data: ["Mon", "Tue", "Wed", "Thu", "Fri", "Sat", "Sun"],
+        },
+        yAxis: {
+          type: "value",
+        },
+        series: [
+          {
+            data: [150, 230, 224, 218, 135, 147, 260],
+            type: "line",
+          },
+        ],
+      };
+
+      option && myChart.setOption(option);
+    },
+  },
 };
 </script>
 
 <style lang="scss" scoped>
-.demo-image .demonstration, .demo-image__error .demonstration, .demo-image__placeholder .demonstration {
-    display: block;
-    color: #8492a6;
-    font-size: 14px;
-    margin-bottom: 20px;
+.demo-image .demonstration,
+.demo-image__error .demonstration,
+.demo-image__placeholder .demonstration {
+  display: block;
+  color: #8492a6;
+  font-size: 14px;
+  margin-bottom: 20px;
 }
-.demo-image .block, .demo-image__error .block, .demo-image__placeholder .block {
-    padding: 30px 0;
-    text-align: center;
-    border-right: 1px solid #eff2f6;
-    display: inline-block;
-    margin: 1em;
-    padding: 1em;
-    box-sizing: border-box;
-    vertical-align: top;
-    cursor: pointer;
+.demo-image .block,
+.demo-image__error .block,
+.demo-image__placeholder .block {
+  padding: 30px 0;
+  text-align: center;
+  border-right: 1px solid #eff2f6;
+  display: inline-block;
+  margin: 1em;
+  padding: 1em;
+  box-sizing: border-box;
+  vertical-align: top;
+  cursor: pointer;
 }
-.demo-image .block:hover{
-    border: 1px solid #1890ff;
-    border-radius: 1em;
+.demo-image .block:hover {
+  border: 1px solid #1890ff;
+  border-radius: 1em;
 }
 </style>
