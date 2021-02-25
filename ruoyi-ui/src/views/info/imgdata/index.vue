@@ -27,7 +27,7 @@
     </div>
     <h1>自定义</h1>
     <div style="margin-bottom: 1em">
-      <el-button type="primary">保存</el-button>
+      <el-button type="primary" @click="init_big_cv_done">保存</el-button>
     </div>
     <el-row>
       <el-col :span="12">
@@ -42,11 +42,15 @@
 
     <h1>大屏</h1>
     <draggable
-      :list="imgs"
+      :list="options"
       animation="340"
       class="drag-wrapper"
+      group="name"
     >
-      <div class="item" v-for="element in imgs" :key="element.id">{{element.name}}</div>
+      <transition-group class="big_cv">
+        <div v-for="item in list" :key="item" class="item" id="">
+        </div>
+      </transition-group>
     </draggable>
   </div>
 </template>
@@ -121,9 +125,7 @@ export default {
       var chartDom = document.getElementById("main");
       var myChart = echarts.init(chartDom);
       var option;
-
       option = op;
-
       option && myChart.setOption(option);
     },
     select_cv(s) {
@@ -134,6 +136,23 @@ export default {
           this.init_cv(_op);
           return;
         }
+      });
+    },
+    init_big_cv(op) {
+      var chartDom = document.createElement("div");
+      chartDom.style.display = "inline-block";
+      chartDom.style.width = "500px";
+      chartDom.style.height = "500px";
+      var myChart = echarts.init(chartDom);
+      var option;
+      option = op;
+      option && myChart.setOption(option);
+      //debugger
+      document.getElementsByClassName("big_cv")[0].appendChild(chartDom);
+    },
+    init_big_cv_done() {
+      this.options.forEach((o, i) => {
+        this.init_big_cv(o.option);
       });
     },
   },
