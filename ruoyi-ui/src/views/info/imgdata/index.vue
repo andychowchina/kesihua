@@ -10,7 +10,12 @@
 
     <div>
       <div class="demo-image">
-        <div class="block" v-for="(img, key) in imgs" :key="key">
+        <div
+          class="block"
+          v-for="(img, key) in imgs"
+          :key="key"
+          @click="select_cv(img)"
+        >
           <span class="demonstration">{{ img.name }}</span>
           <el-image
             style="width: 150px; height: 150px"
@@ -20,15 +25,38 @@
         </div>
       </div>
     </div>
+    <h1>自定义</h1>
+    <div style="margin-bottom: 1em">
+      <el-button type="primary">保存</el-button>
+    </div>
+    <el-row>
+      <el-col :span="12">
+        <div class="grid-content">1</div>
+      </el-col>
+      <el-col :span="12">
+        <div class="grid-content">
+          <div id="main" style="height: 500px"></div>
+        </div>
+      </el-col>
+    </el-row>
 
-    <div id="main" style="height:100px"></div>
+    <h1>大屏</h1>
+    <draggable
+      :list="imgs"
+      animation="340"
+      class="drag-wrapper"
+    >
+      <div class="item" v-for="element in imgs" :key="element.id">{{element.name}}</div>
+    </draggable>
   </div>
 </template>
 
 <script>
 import * as echarts from "echarts";
+import draggable from "vuedraggable";
 
 export default {
+  components: { draggable },
   name: "imgdata",
   data() {
     return {
@@ -37,41 +65,76 @@ export default {
           url:
             "https://cdn.jsdelivr.net/gh/apache/echarts-website@asf-site/examples/data/thumb/line-simple.webp?_v_=1612615474746",
           name: "基础折线图",
+          title: "Basic Line Chart",
         },
         {
           url:
             "https://cdn.jsdelivr.net/gh/apache/echarts-website@asf-site/examples/data/thumb/line-smooth.webp?_v_=1612615474746",
           name: "基础平滑折线图",
+          title: "Smoothed Line Chart",
+        },
+      ],
+      options: [
+        {
+          name: "Basic Line Chart",
+          option: {
+            xAxis: {
+              type: "category",
+              data: ["Mon", "Tue", "Wed", "Thu", "Fri", "Sat", "Sun"],
+            },
+            yAxis: {
+              type: "value",
+            },
+            series: [
+              {
+                data: [150, 230, 224, 218, 135, 147, 260],
+                type: "line",
+              },
+            ],
+          },
+        },
+        {
+          name: "Smoothed Line Chart",
+          option: {
+            xAxis: {
+              type: "category",
+              data: ["Mon", "Tue", "Wed", "Thu", "Fri", "Sat", "Sun"],
+            },
+            yAxis: {
+              type: "value",
+            },
+            series: [
+              {
+                data: [820, 932, 901, 934, 1290, 1330, 1320],
+                type: "line",
+                smooth: true,
+              },
+            ],
+          },
         },
       ],
     };
   },
-  mounted() {
-    this.init_cv()
-  },
+  mounted() {},
   methods: {
-    init_cv() {
+    init_cv(op) {
       var chartDom = document.getElementById("main");
       var myChart = echarts.init(chartDom);
       var option;
 
-      option = {
-        xAxis: {
-          type: "category",
-          data: ["Mon", "Tue", "Wed", "Thu", "Fri", "Sat", "Sun"],
-        },
-        yAxis: {
-          type: "value",
-        },
-        series: [
-          {
-            data: [150, 230, 224, 218, 135, 147, 260],
-            type: "line",
-          },
-        ],
-      };
+      option = op;
 
       option && myChart.setOption(option);
+    },
+    select_cv(s) {
+      var _op = "";
+      this.options.forEach((el) => {
+        if (el.name == s.title) {
+          _op = el.option;
+          this.init_cv(_op);
+          return;
+        }
+      });
     },
   },
 };
