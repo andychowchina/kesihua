@@ -42,14 +42,11 @@
 
     <h1>大屏</h1>
     <draggable
-      :list="options"
       animation="340"
       class="drag-wrapper"
       group="name"
     >
       <transition-group class="big_cv">
-        <div v-for="item in list" :key="item" class="item" id="">
-        </div>
       </transition-group>
     </draggable>
   </div>
@@ -147,7 +144,6 @@ export default {
       var option;
       option = op;
       option && myChart.setOption(option);
-      //debugger
       document.getElementsByClassName("big_cv")[0].appendChild(chartDom);
     },
     init_big_cv_done() {
