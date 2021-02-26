@@ -211,7 +211,8 @@ export default {
 
 .drag-pr-cv {
   height: calc(100vh);
-  width: calc(100vw);
+  width: 100%;
   position: relative;
+  border: 1px solid #ddd;
 }
 </style>
