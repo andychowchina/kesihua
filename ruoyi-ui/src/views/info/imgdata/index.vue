@@ -48,7 +48,10 @@
     <div class="drag-pr-cv">
       <vue-drag-resize
         :parent="true"
-        :w="300" :h="300"
+        :w="300"
+        :h="300"
+        :x="img.x"
+        :y="img.y"
         @resizing="resize_f"
         :onResizeStart="onResizeStartCallback"
         v-for="(img, key) in options"
@@ -88,6 +91,8 @@ export default {
       options: [
         {
           name: "Basic Line Chart",
+          x: 0,
+          y: 0,
           option: {
             xAxis: {
               type: "category",
@@ -106,6 +111,8 @@ export default {
         },
         {
           name: "Smoothed Line Chart",
+          x: 400,
+          y: 0,
           option: {
             xAxis: {
               type: "category",
@@ -160,11 +167,16 @@ export default {
       });
     },
     resize_f(x, y, width, height) {
-      this.$refs[this.target][0].getElementsByTagName('canvas')[0].style.width = width + 'px'
-      this.$refs[this.target][0].getElementsByTagName('canvas')[0].style.height = height + 'px'
+      this.$refs[this.target][0].getElementsByTagName("canvas")[0].style.width =
+        width + "px";
+      this.$refs[this.target][0].getElementsByTagName(
+        "canvas"
+      )[0].style.height = height + "px";
     },
     onResizeStartCallback(handle, ev) {
-      this.target = ev.target.parentElement.getElementsByClassName('target-cv')[0].getAttribute('data-name')
+      this.target = ev.target.parentElement
+        .getElementsByClassName("target-cv")[0]
+        .getAttribute("data-name");
     },
   },
 };
