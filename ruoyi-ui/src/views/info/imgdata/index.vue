@@ -7,7 +7,7 @@
         >
       </el-col>
     </el-row>
-
+    <!--  -->
     <div>
       <div class="demo-image">
         <div
@@ -25,6 +25,7 @@
         </div>
       </div>
     </div>
+    <!--  -->
     <h1>自定义</h1>
     <div style="margin-bottom: 1em">
       <el-button type="primary" @click="init_big_cv_done">保存</el-button>
@@ -39,28 +40,37 @@
         </div>
       </el-col>
     </el-row>
-
+    <!--  -->
     <h1>大屏</h1>
-    <draggable
-      animation="340"
-      class="drag-wrapper"
-      group="name"
-    >
-      <transition-group class="big_cv">
-      </transition-group>
-    </draggable>
+    <div style="margin-bottom: 1em">
+      <el-button type="primary">保存</el-button>
+    </div>
+    <div class="drag-pr-cv">
+      <vue-drag-resize
+        :parent="true"
+        :w="300" :h="300"
+        @resizing="resize_f"
+        :onResizeStart="onResizeStartCallback"
+        v-for="(img, key) in options"
+        :key="key"
+      >
+        <div :ref="img.name" :data-name="img.name" class="target-cv"></div>
+      </vue-drag-resize>
+    </div>
   </div>
 </template>
 
 <script>
 import * as echarts from "echarts";
-import draggable from "vuedraggable";
+import VueDragResize from "vue-draggable-resizable";
+import "vue-draggable-resizable/dist/VueDraggableResizable.css";
 
 export default {
-  components: { draggable },
+  components: { VueDragResize },
   name: "imgdata",
   data() {
     return {
+      target: undefined,
       imgs: [
         {
           url:
@@ -136,20 +146,25 @@ export default {
       });
     },
     init_big_cv(op) {
-      var chartDom = document.createElement("div");
-      chartDom.style.display = "inline-block";
-      chartDom.style.width = "500px";
-      chartDom.style.height = "500px";
+      var chartDom = this.$refs[op.name][0];
+      chartDom.style.width = "100%";
+      chartDom.style.height = "100%";
       var myChart = echarts.init(chartDom);
       var option;
-      option = op;
+      option = op.option;
       option && myChart.setOption(option);
-      document.getElementsByClassName("big_cv")[0].appendChild(chartDom);
     },
     init_big_cv_done() {
       this.options.forEach((o, i) => {
-        this.init_big_cv(o.option);
+        this.init_big_cv(o);
       });
+    },
+    resize_f(x, y, width, height) {
+      this.$refs[this.target][0].getElementsByTagName('canvas')[0].style.width = width + 'px'
+      this.$refs[this.target][0].getElementsByTagName('canvas')[0].style.height = height + 'px'
+    },
+    onResizeStartCallback(handle, ev) {
+      this.target = ev.target.parentElement.getElementsByClassName('target-cv')[0].getAttribute('data-name')
     },
   },
 };
@@ -180,5 +195,11 @@ export default {
 .demo-image .block:hover {
   border: 1px solid #1890ff;
   border-radius: 1em;
+}
+
+.drag-pr-cv {
+  height: calc(100vh);
+  width: calc(100vw);
+  position: relative;
 }
 </style>
